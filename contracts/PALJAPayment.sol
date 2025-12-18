@@ -25,7 +25,22 @@ contract PALJAPayment is Ownable, ReentrancyGuard {
     uint256 public basicReadingPrice = 3 * 10**6;      // $3
     uint256 public fullReadingPrice = 10 * 10**6;      // $10
     uint256 public nftMintPrice = 15 * 10**6;          // $15
-    
+
+    // Talisman tier pricing (in USDC)
+    uint256 public commonTalismanPrice = 5 * 10**6;    // $5 (0.001 ETH equivalent)
+    uint256 public rareTalismanPrice = 20 * 10**6;     // $20 (0.01 ETH equivalent)
+    uint256 public legendaryTalismanPrice = 100 * 10**6; // $100 (0.1 ETH equivalent)
+
+    // Talisman BOKBI pricing (alternative payment)
+    uint256 public commonTalismanBokbi = 100 * 10**18;    // 100 BOKBI
+    uint256 public rareTalismanBokbi = 1_000 * 10**18;    // 1,000 BOKBI
+    uint256 public legendaryTalismanBokbi = 10_000 * 10**18; // 10,000 BOKBI
+
+    // Karma cleansing tiers
+    uint256 public minorCleansePrice = 5 * 10**6;      // $5 (+50 Karma)
+    uint256 public majorCleansePrice = 25 * 10**6;     // $25 (+200 Karma)
+    uint256 public fullResetPrice = 50 * 10**6;        // $50 (Full Reset)
+
     // BOKBI discount (20% = 8000 basis points means pay 80%)
     uint256 public bokbiDiscountBps = 8000;
     
