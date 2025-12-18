@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PALJA Oracle - Your Fortune Awaits</title>
+    <meta name="description" content="Ancient Korean fortune-telling, powered by AI, verified on-chain. It's not alpha. It's PALJA.">
+    <meta property="og:title" content="PALJA Oracle - 福福福福">
+    <meta property="og:description" content="It's not alpha. It's PALJA.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@700;900&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --red-deep: #8B0000;
+            --red-mid: #B22222;
+            --red-bright: #C41E3A;
+            --red-glow: #FF2D55;
+            --gold: #FFD700;
+            --gold-light: #FFEC8B;
+            --gold-dark: #DAA520;
+        }
+
+        body {
+            min-height: 100vh;
+            background: radial-gradient(ellipse at center, var(--red-bright) 0%, var(--red-deep) 50%, #4A0000 100%);
+            overflow: hidden;
+            font-family: 'Cinzel', serif;
+            cursor: none;
+        }
+
+        /* Custom cursor */
+        .cursor {
+            position: fixed;
+            width: 30px;
+            height: 30px;
+            pointer-events: none;
+            z-index: 9999;
+            font-size: 1.8rem;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease;
+            filter: drop-shadow(0 0 10px var(--gold));
+        }
+
+        .cursor-glow {
+            position: fixed;
+            width: 180px;
+            height: 180px;
+            background: radial-gradient(circle, rgba(255, 215, 0, 0.25) 0%, transparent 70%);
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+        }
+
+        /* Falling items container */
+        .falling-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+            overflow: hidden;
+        }
+
+        .falling-item {
+            position: absolute;
+            top: -80px;
+            animation: fall linear infinite;
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5));
+            will-change: transform;
+        }
+
+        .falling-item.fu {
+            font-family: 'Noto Serif KR', serif;
+            color: var(--gold);
+            text-shadow: 0 0 15px var(--gold);
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-80px) rotate(0deg) scale(1);
+                opacity: 0;
+            }
+            5% {
+                opacity: 1;
+            }
+            95% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) rotate(360deg) scale(0.8);
+                opacity: 0;
+            }
+        }
+
+        /* Floating reactive items */
+        .floating-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 3;
+        }
+
+        .floating-item {
+            position: absolute;
+            transition: transform 0.3s ease-out;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
+        }
+
+        .floating-item.fu {
+            font-family: 'Noto Serif KR', serif;
+            color: var(--gold);
+            text-shadow: 0 0 15px var(--gold);
+        }
+
+        /* Main content */
+        .main-content {
+            position: relative;
+            z-index: 10;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* Logo */
+        .logo-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .logo {
+            font-family: 'Noto Serif KR', serif;
+            font-size: clamp(4rem, 18vw, 12rem);
+            font-weight: 900;
+            color: var(--gold);
+            text-shadow: 
+                0 0 20px var(--gold),
+                0 0 40px var(--gold),
+                0 0 60px var(--gold-dark),
+                0 0 80px var(--red-glow);
+            letter-spacing: 0.05em;
+            animation: glow-pulse 2s ease-in-out infinite alternate;
+            user-select: none;
+            position: relative;
+        }
+
+        @keyframes glow-pulse {
+            from {
+                text-shadow: 
+                    0 0 20px var(--gold),
+                    0 0 40px var(--gold),
+                    0 0 60px var(--gold-dark),
+                    0 0 80px var(--red-glow);
+                filter: brightness(1);
+            }
+            to {
+                text-shadow: 
+                    0 0 30px var(--gold),
+                    0 0 60px var(--gold),
+                    0 0 90px var(--gold-dark),
+                    0 0 120px var(--red-glow);
+                filter: brightness(1.1);
+            }
+        }
+
+        .subtitle {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+            color: var(--gold-light);
+            letter-spacing: 0.4em;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        .tagline {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(0.85rem, 2vw, 1.1rem);
+            color: rgba(255, 236, 139, 0.7);
+            letter-spacing: 0.2em;
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        /* Buttons */
+        .button-group {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 0.9rem 2.2rem;
+            font-family: 'Cinzel', serif;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            text-decoration: none;
+            color: var(--gold);
+            background: rgba(139, 0, 0, 0.4);
+            border: 2px solid var(--gold);
+            border-radius: 50px;
+            cursor: none;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(5px);
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.4), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover {
+            background: var(--gold);
+            color: var(--red-deep);
+            box-shadow: 0 0 30px var(--gold), 0 0 60px rgba(255, 215, 0, 0.5);
+            transform: translateY(-3px) scale(1.02);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--red-deep);
+            border: none;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+            font-weight: 700;
+        }
+
+        .btn.primary:hover {
+            box-shadow: 0 0 50px var(--gold), 0 0 100px rgba(255, 215, 0, 0.5);
+            transform: translateY(-4px) scale(1.05);
+        }
+
+        /* Sound toggle */
+        .sound-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(139, 0, 0, 0.5);
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            font-size: 1.3rem;
+            cursor: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+        }
+
+        .sound-toggle:hover {
+            background: var(--gold);
+            color: var(--red-deep);
+            box-shadow: 0 0 25px var(--gold);
+            transform: scale(1.1);
+        }
+
+        /* Footer */
+        .footer {
+            position: fixed;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            color: rgba(255, 215, 0, 0.4);
+            letter-spacing: 0.15em;
+        }
+
+        /* Background watermark */
+        .watermark {
+            position: fixed;
+            font-family: 'Noto Serif KR', serif;
+            font-size: 30vw;
+            color: rgba(255, 215, 0, 0.03);
+            pointer-events: none;
+            user-select: none;
+            z-index: 0;
+        }
+
+        .watermark.top-left {
+            top: -8%;
+            left: -8%;
+        }
+
+        .watermark.bottom-right {
+            bottom: -8%;
+            right: -8%;
+        }
+
+        /* Entry animations */
+        .main-content > * {
+            animation: fadeInUp 0.8s ease-out forwards;
+            opacity: 0;
+        }
+
+        .main-content > *:nth-child(1) { animation-delay: 0.2s; }
+        .main-content > *:nth-child(2) { animation-delay: 0.4s; }
+        .main-content > *:nth-child(3) { animation-delay: 0.6s; }
+        .main-content > *:nth-child(4) { animation-delay: 0.8s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile */
+        @media (max-width: 600px) {
+            .button-group {
+                flex-direction: column;
+                width: 100%;
+                padding: 0 1.5rem;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+
+            .cursor, .cursor-glow {
+                display: none;
+            }
+
+            body {
+                cursor: auto;
+            }
+
+            .btn, .sound-toggle {
+                cursor: pointer;
+            }
+        }
+
+        /* Particle burst on click */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 1.5rem;
+            z-index: 1000;
+            animation: particle-burst 0.8s ease-out forwards;
+        }
+
+        @keyframes particle-burst {
+            0% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--tx), var(--ty)) scale(0.5) rotate(var(--rot));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Watermarks -->
+    <div class="watermark top-left">福</div>
+    <div class="watermark bottom-right">福</div>
+
+    <!-- Custom cursor -->
+    <div class="cursor" id="cursor">🧧</div>
+    <div class="cursor-glow" id="cursorGlow"></div>
+
+    <!-- Falling items (rain effect) -->
+    <div class="falling-container" id="fallingContainer"></div>
+
+    <!-- Floating reactive items -->
+    <div class="floating-container" id="floatingContainer"></div>
+
+    <!-- Sound toggle -->
+    <button class="sound-toggle" id="soundToggle" title="Toggle Sound">
+        🔇
+    </button>
+
+    <!-- Main content -->
+    <main class="main-content">
+        <div class="subtitle">PALJA Oracle</div>
+        <div class="logo-container">
+            <h1 class="logo">福福福福</h1>
+        </div>
+        <p class="tagline">"It's not alpha. It's PALJA."</p>
+        
+        <div class="button-group">
+            <a href="#" class="btn">Telegram</a>
+            <a href="#" class="btn">Twitter</a>
+            <a href="#" class="btn primary">Enter Oracle</a>
+        </div>
+    </main>
+
+    <footer class="footer">
+        © 2025 PALJA Oracle · $BOKBI
+    </footer>
+
+    <script>
+        // ============ FALLING RAIN EFFECT ============
+        const fallingContainer = document.getElementById('fallingContainer');
+        const fallingItems = ['福', '🧧', '福', '👛', '福', '🎒', '💰', '福', '🧧', '福'];
+        
+        function createFallingItem() {
+            const item = document.createElement('div');
+            const type = fallingItems[Math.floor(Math.random() * fallingItems.length)];
+            const isFu = type === '福';
+            
+            item.className = 'falling-item ' + (isFu ? 'fu' : '');
+            item.textContent = type;
+            item.style.left = Math.random() * 100 + 'vw';
+            item.style.fontSize = (Math.random() * 1.8 + 1.2) + 'rem';
+            item.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            item.style.animationDelay = Math.random() * 0.5 + 's';
+            item.style.opacity = Math.random() * 0.5 + 0.5;
+            
+            fallingContainer.appendChild(item);
+            
+            // Remove after animation completes
+            const duration = parseFloat(item.style.animationDuration) * 1000 + 1000;
+            setTimeout(() => item.remove(), duration);
+        }
+
+        // Create initial burst
+        for (let i = 0; i < 30; i++) {
+            setTimeout(createFallingItem, i * 100);
+        }
+
+        // Continuous falling
+        setInterval(createFallingItem, 150);
+
+        // ============ MOUSE REACTIVE FLOATING ITEMS ============
+        const floatingContainer = document.getElementById('floatingContainer');
+        const cursor = document.getElementById('cursor');
+        const cursorGlow = document.getElementById('cursorGlow');
+        
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+        let cursorX = mouseX;
+        let cursorY = mouseY;
+
+        const floatingItemsData = [];
+        const floatingTypes = ['福', '🧧', '福', '👛', '💰'];
+        
+        // Create floating reactive items
+        function createFloatingItems() {
+            const count = Math.min(25, Math.floor(window.innerWidth / 60));
+            
+            for (let i = 0; i < count; i++) {
+                const item = document.createElement('div');
+                const type = floatingTypes[Math.floor(Math.random() * floatingTypes.length)];
+                const isFu = type === '福';
+                
+                item.className = 'floating-item ' + (isFu ? 'fu' : '');
+                item.textContent = type;
+                
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                const size = Math.random() * 1.2 + 1.3;
+                
+                item.style.left = x + 'px';
+                item.style.top = y + 'px';
+                item.style.fontSize = size + 'rem';
+                item.style.opacity = Math.random() * 0.3 + 0.5;
+                
+                floatingContainer.appendChild(item);
+                
+                floatingItemsData.push({
+                    element: item,
+                    baseX: x,
+                    baseY: y,
+                    x: x,
+                    y: y
+                });
+            }
+        }
+
+        createFloatingItems();
+
+        // Mouse move handler
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        // Animation loop
+        function animate() {
+            // Smooth cursor follow
+            cursorX += (mouseX - cursorX) * 0.15;
+            cursorY += (mouseY - cursorY) * 0.15;
+            
+            cursor.style.left = cursorX + 'px';
+            cursor.style.top = cursorY + 'px';
+            cursorGlow.style.left = mouseX + 'px';
+            cursorGlow.style.top = mouseY + 'px';
+
+            // Floating items react to mouse (push away effect)
+            floatingItemsData.forEach((item) => {
+                const dx = mouseX - item.baseX;
+                const dy = mouseY - item.baseY;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                const maxDist = 180;
+                
+                if (dist < maxDist) {
+                    const force = (1 - dist / maxDist) * 100;
+                    const angle = Math.atan2(dy, dx);
+                    item.x = item.baseX - Math.cos(angle) * force;
+                    item.y = item.baseY - Math.sin(angle) * force;
+                } else {
+                    item.x += (item.baseX - item.x) * 0.08;
+                    item.y += (item.baseY - item.y) * 0.08;
+                }
+                
+                item.element.style.transform = `translate(${item.x - item.baseX}px, ${item.y - item.baseY}px)`;
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+
+        // ============ CLICK PARTICLE BURST ============
+        document.addEventListener('click', (e) => {
+            const particles = ['福', '🧧', '✨', '💫', '🌟', '💰'];
+            
+            for (let i = 0; i < 10; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.textContent = particles[Math.floor(Math.random() * particles.length)];
+                particle.style.left = e.clientX + 'px';
+                particle.style.top = e.clientY + 'px';
+                
+                const angle = (i / 10) * Math.PI * 2;
+                const distance = 100 + Math.random() * 80;
+                particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+                particle.style.setProperty('--rot', (Math.random() * 360) + 'deg');
+                
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 800);
+            }
+        });
+
+        // ============ SOUND TOGGLE ============
+        let soundOn = false;
+        const soundToggle = document.getElementById('soundToggle');
+
+        soundToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            soundOn = !soundOn;
+            soundToggle.textContent = soundOn ? '🔊' : '🔇';
+        });
+
+        // ============ RESIZE HANDLER ============
+        window.addEventListener('resize', () => {
+            floatingItemsData.forEach(item => {
+                item.baseX = Math.random() * window.innerWidth;
+                item.baseY = Math.random() * window.innerHeight;
+                item.element.style.left = item.baseX + 'px';
+                item.element.style.top = item.baseY + 'px';
+            });
+        });
+
+        // ============ CURSOR HOVER EFFECT ============
+        const buttons = document.querySelectorAll('.btn, .sound-toggle');
+        buttons.forEach(btn => {
+            btn.addEventListener('mouseenter', () => {
+                cursor.textContent = '👆';
+                cursor.style.transform = 'translate(-50%, -50%) scale(1.3)';
+            });
+            btn.addEventListener('mouseleave', () => {
+                cursor.textContent = '🧧';
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            });
+        });
+    </script>
+</body>
+</html>

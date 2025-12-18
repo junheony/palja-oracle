@@ -1,0 +1,14 @@
+{
+  "name": "palja-oracle",
+  "version": "1.0.0",
+  "description": "Ancient Korean fortune-telling, powered by AI, verified on-chain",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "keywords": ["web3", "fortune", "saju", "blockchain", "ai"],
+  "author": "PALJA DAO",
+  "license": "MIT"
+}
