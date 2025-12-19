@@ -1,0 +1,144 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Cinzel:wght@400;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --red-deep: #8B0000;
+  --red-mid: #B22222;
+  --red-bright: #C41E3A;
+  --red-glow: #FF2D55;
+  --gold: #FFD700;
+  --gold-light: #FFEC8B;
+  --gold-dark: #DAA520;
+}
+
+body {
+  background: radial-gradient(ellipse at center, var(--red-bright) 0%, var(--red-deep) 50%, #4A0000 100%);
+  min-height: 100vh;
+  font-family: 'Cinzel', serif;
+  color: var(--gold);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--red-deep);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gold-dark);
+  border-radius: 4px;
+}
+
+/* Talisman background pattern */
+.talisman-bg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='200' viewBox='0 0 150 200'%3E%3Crect x='10' y='10' width='130' height='180' rx='5' fill='none' stroke='%23FFD700' stroke-width='2'/%3E%3Crect x='20' y='20' width='110' height='160' rx='3' fill='none' stroke='%23FFD700' stroke-width='1'/%3E%3Ctext x='75' y='55' text-anchor='middle' font-size='18' fill='%23FFD700' font-family='serif'%3E%E5%8B%85%E4%BB%A4%3C/text%3E%3Ctext x='75' y='85' text-anchor='middle' font-size='14' fill='%23FFD700' font-family='serif'%3E%E5%A4%A9%E4%B8%8B%E5%A4%AA%E5%B9%B3%3C/text%3E%3Ctext x='75' y='115' text-anchor='middle' font-size='24' fill='%23FFD700' font-family='serif'%3E%E7%AC%A6%3C/text%3E%3C/svg%3E");
+  background-size: 200px 280px;
+  animation: talisman-drift 120s linear infinite;
+}
+
+@keyframes talisman-drift {
+  0% { background-position: 0 0; }
+  100% { background-position: 200px 280px; }
+}
+
+/* Gold text glow */
+.gold-glow {
+  text-shadow:
+    0 0 10px var(--gold),
+    0 0 20px var(--gold),
+    0 0 30px var(--gold-dark);
+}
+
+/* Button styles */
+.btn-oracle {
+  @apply px-6 py-3 rounded-full font-semibold tracking-wider uppercase transition-all duration-300;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+  color: var(--red-deep);
+  box-shadow: 0 0 25px rgba(255, 215, 0, 0.6);
+}
+
+.btn-oracle:hover {
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.8);
+}
+
+.btn-oracle-outline {
+  @apply px-6 py-3 rounded-full font-semibold tracking-wider uppercase transition-all duration-300;
+  background: rgba(139, 0, 0, 0.4);
+  border: 2px solid var(--gold);
+  color: var(--gold);
+  backdrop-filter: blur(5px);
+}
+
+.btn-oracle-outline:hover {
+  background: var(--gold);
+  color: var(--red-deep);
+}
+
+/* Card styles */
+.oracle-card {
+  background: linear-gradient(135deg, var(--red-deep) 0%, #1a0000 100%);
+  border: 2px solid var(--gold);
+  border-radius: 20px;
+  box-shadow:
+    0 0 30px rgba(255, 215, 0, 0.3),
+    inset 0 0 20px rgba(255, 215, 0, 0.05);
+}
+
+/* Input styles */
+.oracle-input {
+  @apply w-full px-4 py-3 rounded-lg transition-all duration-300;
+  background: rgba(139, 0, 0, 0.3);
+  border: 2px solid var(--gold-dark);
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+}
+
+.oracle-input:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.oracle-input::placeholder {
+  color: rgba(255, 215, 0, 0.4);
+}
+
+/* Select styles */
+.oracle-select {
+  @apply w-full px-4 py-3 rounded-lg transition-all duration-300 cursor-pointer;
+  background: rgba(139, 0, 0, 0.3);
+  border: 2px solid var(--gold-dark);
+  color: var(--gold);
+  font-family: 'Cinzel', serif;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23FFD700' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+.oracle-select:focus {
+  outline: none;
+  border-color: var(--gold);
+  box-shadow: 0 0 15px rgba(255, 215, 0, 0.4);
+}
+
+.oracle-select option {
+  background: var(--red-deep);
+  color: var(--gold);
+}
